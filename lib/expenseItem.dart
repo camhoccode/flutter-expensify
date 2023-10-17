@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ExpenseItem extends StatelessWidget {
   final String title;
@@ -24,11 +25,14 @@ class ExpenseItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            amount.toString(),
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+          SizedBox(
+            width: 60,
+            child: Text(
+              '\$$amount',
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.pink),
             ),
           ),
           const SizedBox(
@@ -46,7 +50,7 @@ class ExpenseItem extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              Text(date.toString()),
+              Text(DateFormat('dd-MM-yyyy').format(date)),
             ],
           ),
         ],

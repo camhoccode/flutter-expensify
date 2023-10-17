@@ -39,11 +39,16 @@ class MyHomePage extends StatelessWidget {
       date: DateTime.now(),
     ),
   ];
+  // late String titleInput;
+  // late String amountInput;
+  final titleController = TextEditingController();
+  final amountController = TextEditingController();
   MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Flutter App'),
       ),
@@ -68,6 +73,34 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(
+            height: 10,
+          ),
+          Card(
+              elevation: 2,
+              child: Container(
+                padding: const EdgeInsets.all(5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    TextField(
+                      decoration: const InputDecoration(labelText: 'Title'),
+                      controller: titleController,
+                      // onChanged: (value) => {titleInput = value},
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(labelText: 'Amount'),
+                      controller: amountController,
+                      // onChanged: (value) => {amountInput = value},
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          print(titleController.text);
+                        },
+                        child: const Text('Add expense'))
+                  ],
+                ),
+              )),
           const SizedBox(
             height: 10,
           ),
