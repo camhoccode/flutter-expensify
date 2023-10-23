@@ -26,9 +26,9 @@ class ExpenseItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            width: 60,
+            width: 80,
             child: Text(
-              '\$$amount',
+              '\$${amount.toStringAsFixed(2)}',
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

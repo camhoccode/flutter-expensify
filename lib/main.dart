@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_expensify/expenseItem.dart';
-import 'package:flutter_expensify/transaction.dart';
+import 'package:flutter_expensify/widgets/addExpenseForm.dart';
+import 'package:flutter_expensify/widgets/expenseItem.dart';
+import 'package:flutter_expensify/models/transaction.dart';
+import 'package:flutter_expensify/widgets/expenseList.dart';
+import 'package:flutter_expensify/widgets/UserExpensesManage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,15 +14,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Expensify',
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final List<Transaction> transactions = [
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
     Transaction(
       id: '001',
       title: 'Car',
@@ -39,11 +49,32 @@ class MyHomePage extends StatelessWidget {
       date: DateTime.now(),
     ),
   ];
+
   // late String titleInput;
-  // late String amountInput;
   final titleController = TextEditingController();
+
   final amountController = TextEditingController();
-  MyHomePage({super.key});
+  void _addNewExpense(String title, double amount) {
+    final newExpense = Transaction(
+        id: DateTime.now().toString(),
+        date: DateTime.now(),
+        title: title,
+        amount: amount);
+    setState(() {
+      _userTransactions.add(newExpense);
+    });
+  }
+
+  void _startAddingExpense(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return GestureDetector(
+              onTap: () {},
+              behavior: HitTestBehavior.opaque,
+              child: AddNewExpense(addExpense: _addNewExpense));
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +82,13 @@ class MyHomePage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Flutter App'),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () => _startAddingExpense(context),
+              icon: const Icon(
+                Icons.add,
+              ))
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -73,49 +111,17 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Card(
-              elevation: 2,
-              child: Container(
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Title'),
-                      controller: titleController,
-                      // onChanged: (value) => {titleInput = value},
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Amount'),
-                      controller: amountController,
-                      // onChanged: (value) => {amountInput = value},
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          print(titleController.text);
-                        },
-                        child: const Text('Add expense'))
-                  ],
-                ),
-              )),
-          const SizedBox(
-            height: 10,
-          ),
-          Column(
-            children: transactions
-                .map((e) => ExpenseItem(
-                      amount: e.amount,
-                      date: e.date,
-                      title: e.title,
-                      id: e.id,
-                    ))
-                .toList(),
-          ),
+          // const UserExpensesManage()
+          ExpenseList(_userTransactions),
+          // Column(
+          //   children: [ExpenseList(_userTransactions)],
+          // ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => _startAddingExpense(context),
+          child: const Icon(Icons.add)),
     );
   }
 }
